@@ -187,6 +187,18 @@
     .wufar-confidence.medium { background:#fef9c3; color:#713f12; }
     .wufar-confidence.low { background:#fee2e2; color:#991b1b; }
 
+    /* LEARN PAGE */
+    .learn-note-item { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:7px; }
+    .learn-note-item.is-override { border-left:3px solid #16a34a; }
+    .learn-note-body { flex:1; min-width:0; }
+    .learn-note-text { font-size:13px; color:var(--text); line-height:1.5; }
+    .learn-note-codes { display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; }
+    .learn-code-chip { font-size:10px; font-weight:600; padding:2px 7px; border-radius:3px; }
+    .learn-code-chip.obj { background:#d1fae5; color:#065f46; }
+    .learn-code-chip.fn  { background:#dbeafe; color:#1e40af; }
+    .learn-code-chip.fund{ background:#fef3c7; color:#92400e; }
+    .learn-code-chip.kw  { background:#f3f4f6; color:#4b5563; }
+
     /* WUFAR MODAL */
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; }
     .modal-box { background:var(--surface); border-radius:10px; box-shadow:0 8px 32px rgba(0,0,0,.2); width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; }
@@ -237,6 +249,11 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         Tasks
         <span class="nav-badge amber" id="badge-tasks">0</span>
+      </a>
+      <a class="nav-item" id="nav-learn" onclick="showPage('learn')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Learn
+        <span class="nav-badge amber" id="badge-learn" style="display:none;">0</span>
       </a>
       <a class="nav-item" id="nav-wufar" onclick="showPage('wufar')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -451,6 +468,53 @@
       </div>
     </div>
 
+    <!-- LEARN PAGE -->
+    <div class="page" id="page-learn">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Learn</div>
+          <div class="page-subtitle">Teach the app your preferences — corrections here update WUFAR recommendations automatically</div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="card" style="padding:18px; margin-bottom:18px;">
+        <div class="section-title" style="margin-bottom:6px;">Add a note or correction</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px; line-height:1.6;">
+          Write in plain language. To correct a WUFAR code, include the trigger keywords and the correct code.<br>
+          <span style="color:#166534; font-weight:500;">Examples:</span>
+          <code style="background:#f1f3f5; padding:1px 5px; border-radius:3px; font-size:11px;">for gas for truck use object 345</code> &nbsp;·&nbsp;
+          <code style="background:#f1f3f5; padding:1px 5px; border-radius:3px; font-size:11px;">when food service use fund 50</code> &nbsp;·&nbsp;
+          <code style="background:#f1f3f5; padding:1px 5px; border-radius:3px; font-size:11px;">Brandon Leslie fuel requisitions should be object 345 function 253000</code>
+        </div>
+        <textarea id="learn-input" class="form-input" rows="3" placeholder="Type your note, correction, or question here..." style="width:100%; resize:vertical; font-family:inherit; font-size:13px; line-height:1.6;" onkeydown="if(event.key==='Enter' && event.metaKey) submitNote()"></textarea>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+          <button class="btn btn-primary" onclick="submitNote()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Save &amp; Learn
+          </button>
+          <span id="learn-feedback" style="font-size:12px; font-weight:500;"></span>
+        </div>
+      </div>
+
+      <!-- Active WUFAR overrides -->
+      <div class="card" style="padding:16px 18px; margin-bottom:18px;">
+        <div class="section-title" style="margin-bottom:10px;">Active WUFAR Overrides</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">These rules override the default WUFAR recommendations whenever matching keywords appear in a requisition.</div>
+        <div id="learn-overrides-list"></div>
+      </div>
+
+      <!-- All notes -->
+      <div class="card" style="padding:16px 18px; margin-bottom:18px;">
+        <div class="section-title" style="margin-bottom:10px;">All Notes &amp; Corrections</div>
+        <div id="learn-notes-list"></div>
+      </div>
+
+      <div style="text-align:center; padding: 24px 0 8px; font-size:11px; color:var(--text-faint);">
+        <a href="https://www.perplexity.ai/computer" target="_blank" style="color:inherit; text-decoration:none;">Created with Perplexity Computer</a>
+      </div>
+    </div>
+
     <!-- SCHEDULE PAGE -->
     <div class="page" id="page-schedule">
       <div class="page-header">
@@ -527,6 +591,7 @@ const WUFAR_OBJECTS = {
   '415': { desc: 'Food', keywords: ['food', 'meal', 'groceries', 'snack', 'breakfast', 'lunch', 'dairy', 'produce', 'commodity', 'catering'] },
   '420': { desc: 'Apparel', keywords: ['apparel', 'uniform', 'clothing', 'shirt', 'jersey', 'jacket', 'gear', 'vest'] },
   '344': { desc: 'Vehicle Fuel', keywords: ['gas', 'fuel', 'gasoline', 'diesel', 'petrol', 'speedway', 'superamerica', 'kwiktrip', 'fleet'] },
+  '345': { desc: 'Vehicle Fuel (348/345)', keywords: ['vehicle fuel', 'gas for truck', 'gas for tractor', 'gas for bus', 'fuel for truck', 'fuel for tractor', 'speedway truck', 'superamerica truck', 'brandon leslie'] },
   '325': { desc: 'Vehicle & Equipment Rental', keywords: ['vehicle rental', 'car rental', 'truck rental', 'equipment rental', 'rental car'] },
   '310': { desc: 'Contracted Services', keywords: ['contracted', 'contract', 'service agreement', 'consultant', 'consulting', 'professional services', 'vendor service', 'repair service', 'maintenance service', 'inspection'] },
   '321': { desc: 'Technology Repairs & Maintenance', keywords: ['computer repair', 'tech repair', 'it maintenance', 'device repair', 'chromebook repair', 'tablet repair', 'phone repair'] },
@@ -602,7 +667,7 @@ const WUFAR_SOURCES = {
 
 // Common purchase patterns at GDRH
 const COMMON_PURCHASES = [
-  { label:'Vehicle Fuel (truck/tractor)', obj:'344', fn:'253000', fund:'10', note:'Common: gas/diesel at Speedway for district vehicles used in operations/grounds work.' },
+  { label:'Vehicle Fuel (truck/tractor) — Brandon Leslie reqs', obj:'345', fn:'253000', fund:'10', note:'Gas/diesel at Speedway for district trucks/tractors. Use 345 per district convention.' },
   { label:'General Office Supplies', obj:'411', fn:'252000', fund:'10', note:'Office supplies for business/finance office.' },
   { label:'Classroom Supplies', obj:'411', fn:'120000', fund:'10', note:'General classroom supplies for instructional use.' },
   { label:'Food Service Supplies', obj:'411', fn:'257200', fund:'50', note:'Non-food supplies for cafeteria operations (Fund 50).' },
@@ -622,6 +687,126 @@ const COMMON_PURCHASES = [
   { label:'DC Fundraiser / Student Travel Costs', obj:'411', fn:'160000', fund:'10', note:'Supplies and expenses related to co-curricular DC trip/fundraiser.' },
 ];
 
+// ---- LEARNING ENGINE ----
+// learnedOverrides: array of { keywords:[], objectCode, objectDesc, functionCode, functionDesc, fundCode, note, date }
+let learnedOverrides = JSON.parse(localStorage.getItem('gdrh_overrides') || '[]');
+let learnedNotes = JSON.parse(localStorage.getItem('gdrh_notes') || '[]');
+
+function saveOverrides() { try { localStorage.setItem('gdrh_overrides', JSON.stringify(learnedOverrides)); localStorage.setItem('gdrh_notes', JSON.stringify(learnedNotes)); } catch(e) {} }
+
+function applyLearnedOverride(text) {
+  const t = text.toLowerCase();
+  for (const ov of learnedOverrides) {
+    if (ov.keywords.some(k => t.includes(k.toLowerCase()))) return ov;
+  }
+  return null;
+}
+
+function addLearnedNote(note) {
+  // Try to parse WUFAR corrections from the note text
+  // Patterns: "object 345", "obj 345", "function 253000", "fn 253000", "fund 50"
+  const objMatch = note.match(/\b(?:object|obj)[:\s]+([0-9]{3})/i);
+  const fnMatch  = note.match(/\b(?:function|fn)[:\s]+([0-9]{6})/i);
+  const fundMatch= note.match(/\bfund[:\s]+([0-9]{2})/i);
+  // Extract keyword triggers — words after "for" or "when" or just key nouns
+  const keywordMatch = note.match(/(?:for|when|if)[:\s]+([\w\s,]+?)(?:\s+(?:use|should|object|obj|function|fn)|$)/i);
+  const keywords = keywordMatch ? keywordMatch[1].split(/[,\s]+/).map(k=>k.trim()).filter(k=>k.length>2) : [];
+
+  const entry = {
+    id: 'n' + Date.now(),
+    raw: note,
+    date: new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}),
+    objectCode: objMatch ? objMatch[1] : null,
+    objectDesc: objMatch ? (WUFAR_OBJECTS[objMatch[1]]?.desc || 'Object ' + objMatch[1]) : null,
+    functionCode: fnMatch ? fnMatch[1] : null,
+    functionDesc: fnMatch ? (WUFAR_FUNCTIONS[fnMatch[1]]?.desc || 'Function ' + fnMatch[1]) : null,
+    fundCode: fundMatch ? fundMatch[1] : null,
+    keywords,
+    isOverride: !!(objMatch || fnMatch)
+  };
+  learnedNotes.unshift(entry);
+  if (entry.isOverride && keywords.length > 0) {
+    learnedOverrides.unshift({ ...entry });
+  }
+  saveOverrides();
+  return entry;
+}
+
+function renderLearnPage() {
+  const notesList = document.getElementById('learn-notes-list');
+  const overridesList = document.getElementById('learn-overrides-list');
+  if (!notesList) return;
+
+  if (learnedNotes.length === 0) {
+    notesList.innerHTML = `<div class="empty-state" style="padding:24px;"><div class="empty-state-title">No notes yet</div><div class="empty-state-sub">Add your first note above to teach the app your preferences.</div></div>`;
+  } else {
+    notesList.innerHTML = learnedNotes.map(n => `
+      <div class="learn-note-item ${n.isOverride ? 'is-override' : ''}">
+        <div class="learn-note-body">
+          <div class="learn-note-text">${n.raw}</div>
+          ${n.isOverride ? `<div class="learn-note-codes">
+            ${n.objectCode ? `<span class="learn-code-chip obj">${n.objectCode} ${n.objectDesc||''}</span>` : ''}
+            ${n.functionCode ? `<span class="learn-code-chip fn">${n.functionCode} ${n.functionDesc||''}</span>` : ''}
+            ${n.fundCode ? `<span class="learn-code-chip fund">Fund ${n.fundCode}</span>` : ''}
+            ${n.keywords.length ? `<span class="learn-code-chip kw">triggers: ${n.keywords.join(', ')}</span>` : ''}
+          </div>` : ''}
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+          ${n.isOverride ? '<span class="badge" style="background:#d1fae5;color:#065f46;">override</span>' : '<span class="badge badge-other">note</span>'}
+          <span style="font-size:10px; color:var(--text-faint);">${n.date}</span>
+          <button class="btn btn-danger btn-sm" onclick="deleteNote('${n.id}')" title="Delete"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+        </div>
+      </div>`).join('');
+  }
+
+  if (learnedOverrides.length === 0) {
+    overridesList.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:8px 0;">No WUFAR overrides learned yet. Add a note with an object or function code correction above.</div>`;
+  } else {
+    overridesList.innerHTML = learnedOverrides.map(ov => `
+      <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:6px; font-size:12px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <div style="flex:1;">
+          <span style="color:var(--text-muted);">When: </span><strong>${ov.keywords.join(', ')}</strong>
+          <span style="color:var(--text-muted); margin-left:10px;">→</span>
+          ${ov.objectCode ? ` <span style="color:#166534; font-weight:600;">Obj ${ov.objectCode}</span>` : ''}
+          ${ov.functionCode ? ` <span style="color:#1d4ed8; font-weight:600;">Fn ${ov.functionCode}</span>` : ''}
+          ${ov.fundCode ? ` <span style="color:#92400e; font-weight:600;">Fund ${ov.fundCode}</span>` : ''}
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="deleteOverride('${ov.id}')" title="Remove rule"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+      </div>`).join('');
+  }
+}
+
+function submitNote() {
+  const input = document.getElementById('learn-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const entry = addLearnedNote(val);
+  input.value = '';
+  renderLearnPage();
+  // Show confirmation
+  const fb = document.getElementById('learn-feedback');
+  fb.textContent = entry.isOverride
+    ? `✓ Learned! This override will apply to future WUFAR recommendations${entry.keywords.length ? ' when matching: ' + entry.keywords.join(', ') : ''}.`
+    : '✓ Note saved.';
+  fb.style.color = '#166534';
+  setTimeout(() => { fb.textContent = ''; }, 4000);
+  // Re-render email + task lists so WUFAR blocks update immediately
+  renderEmailList();
+  renderTaskList();
+}
+
+function deleteNote(id) {
+  learnedNotes = learnedNotes.filter(n => n.id !== id);
+  learnedOverrides = learnedOverrides.filter(n => n.id !== id);
+  saveOverrides();
+  renderLearnPage();
+  renderEmailList();
+  renderTaskList();
+}
+
+function deleteOverride(id) { deleteNote(id); }
+
 function wufarKeywordMatch(text, keywords) {
   const t = text.toLowerCase();
   let score = 0;
@@ -633,6 +818,20 @@ function wufarKeywordMatch(text, keywords) {
 
 function getWufarRecommendation(descText, fund) {
   const text = descText.toLowerCase();
+
+  // CHECK LEARNED OVERRIDES FIRST — user corrections take highest priority
+  const override = applyLearnedOverride(text);
+  if (override) {
+    return {
+      object: override.objectCode ? { code: override.objectCode, desc: override.objectDesc || WUFAR_OBJECTS[override.objectCode]?.desc || '' } : { code: '411', desc: 'General Supplies' },
+      function: override.functionCode ? { code: override.functionCode, desc: override.functionDesc || WUFAR_FUNCTIONS[override.functionCode]?.desc || '' } : { code: '252000', desc: 'Fiscal Services' },
+      confidence: 'high',
+      fundCode: override.fundCode || fund || '10',
+      source: null,
+      learnedOverride: true,
+    };
+  }
+
   // Score all objects
   let bestObj = null, bestObjScore = 0;
   for (const [code, info] of Object.entries(WUFAR_OBJECTS)) {
@@ -664,12 +863,13 @@ function getWufarRecommendation(descText, fund) {
 
 function wufarChipHTML(rec, itemId, mode) {
   // mode: 'email' or 'task'
-  const cLabel = rec.confidence === 'high' ? '✓ High confidence' : rec.confidence === 'medium' ? '~ Medium confidence' : '? Low confidence';
+  const cLabel = rec.learnedOverride ? '★ Learned override' : rec.confidence === 'high' ? '✓ High confidence' : rec.confidence === 'medium' ? '~ Medium confidence' : '? Low confidence';
+  const confClass = rec.learnedOverride ? 'high' : rec.confidence;
   return `<div class="wufar-block" id="wufar-${mode}-${itemId}">
     <div class="wufar-block-title">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       WUFAR Recommendation
-      <span class="wufar-confidence ${rec.confidence}">${cLabel}</span>
+      <span class="wufar-confidence ${confClass}">${cLabel}</span>
     </div>
     <div class="wufar-code-row">
       <div class="wufar-code">
@@ -784,11 +984,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAll();
 });
 
-function renderAll() { renderEmailList(); renderTaskList(); renderSchedule(); renderWufarPage(); refreshBadges(); }
+function renderAll() { renderEmailList(); renderTaskList(); renderSchedule(); renderWufarPage(); renderLearnPage(); refreshBadges(); }
 
 // ---- NAVIGATION ----
 function showPage(name) {
-  ['overview','tasks','schedule','wufar'].forEach(p => {
+  ['overview','tasks','schedule','wufar','learn'].forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p === name);
     document.getElementById('nav-'+p).classList.toggle('active', p === name);
   });
