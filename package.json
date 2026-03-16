@@ -1,0 +1,12 @@
+{
+  "name": "gdrh-finance-hub",
+  "version": "1.0.0",
+  "description": "GDRH Finance Inbox Hub",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
