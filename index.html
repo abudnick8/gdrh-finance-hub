@@ -282,7 +282,7 @@
           <div class="page-title">Inbox Overview</div>
           <div class="page-subtitle" id="today-date"></div>
         </div>
-        <button class="btn btn-outline" onclick="refreshBadges()">
+        <button class="btn btn-outline" onclick="renderAll()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           Refresh
         </button>
@@ -796,22 +796,19 @@ function submitNote() {
   // Show confirmation
   const fb = document.getElementById('learn-feedback');
   fb.textContent = entry.isOverride
-    ? `✓ Learned! This override will apply to future WUFAR recommendations${entry.keywords.length ? ' when matching: ' + entry.keywords.join(', ') : ''}.`
+    ? `✓ Learned! Override active — all requisitions updated now${entry.keywords.length ? ' (triggers: ' + entry.keywords.join(', ') + ')' : ''}.`
     : '✓ Note saved.';
   fb.style.color = '#166534';
-  setTimeout(() => { fb.textContent = ''; }, 4000);
-  // Re-render email + task lists so WUFAR blocks update immediately
-  renderEmailList();
-  renderTaskList();
+  setTimeout(() => { fb.textContent = ''; }, 5000);
+  // Re-render EVERYTHING so overrides apply immediately across all pages
+  renderAll();
 }
 
 function deleteNote(id) {
   learnedNotes = learnedNotes.filter(n => n.id !== id);
   learnedOverrides = learnedOverrides.filter(n => n.id !== id);
   saveOverrides();
-  renderLearnPage();
-  renderEmailList();
-  renderTaskList();
+  renderAll();
 }
 
 function deleteOverride(id) { deleteNote(id); }
