@@ -1,8 +1,0 @@
-[phases.install]
-cmds = ["npm install"]
-
-[phases.build]
-cmds = ["echo 'static site'"]
-
-[start]
-cmd = "serve -s . -l $PORT"
