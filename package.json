@@ -1,0 +1,15 @@
+{
+  "name": "gdrh-finance-hub",
+  "version": "1.0.0",
+  "description": "GDRH Finance Inbox Hub — email digest, task management, WUFAR code lookup",
+  "scripts": {
+    "start": "npx serve . -p ${PORT:-3000} -s",
+    "build": "echo 'Static site — no build step needed'"
+  },
+  "dependencies": {
+    "serve": "^14.2.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

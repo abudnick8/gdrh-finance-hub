@@ -1,0 +1,1013 @@
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GDRH Finance Inbox Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fa; --surface: #ffffff; --surface2: #f1f3f5;
+      --border: #dee2e6; --text: #212529; --text-muted: #6c757d;
+      --text-faint: #adb5bd; --primary: #2563eb; --primary-hover: #1d4ed8;
+      --primary-fg: #ffffff; --success: #16a34a; --warning: #d97706;
+      --danger: #dc2626; --sidebar-bg: #1e293b; --sidebar-text: #e2e8f0;
+      --sidebar-muted: #94a3b8; --sidebar-active: #2563eb; --sidebar-hover: #334155;
+      --radius: 8px; --shadow: 0 1px 3px rgba(0,0,0,.1);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    html, body { height: 100%; font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+    .layout { display: flex; height: 100vh; overflow: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { width: 220px; flex-shrink: 0; background: var(--sidebar-bg); display: flex; flex-direction: column; overflow-y: auto; }
+    .sidebar-logo { padding: 18px 16px 14px; border-bottom: 1px solid #334155; }
+    .sidebar-logo-inner { display: flex; align-items: center; gap: 10px; }
+    .sidebar-logo svg { flex-shrink: 0; }
+    .sidebar-logo-text { font-size: 13px; font-weight: 600; color: var(--sidebar-text); line-height: 1.2; }
+    .sidebar-logo-sub { font-size: 11px; color: var(--sidebar-muted); }
+    .sidebar-nav { flex: 1; padding: 10px 8px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 6px; cursor: pointer; color: var(--sidebar-muted); font-size: 13px; font-weight: 500; transition: all .15s; margin-bottom: 2px; text-decoration: none; position: relative; }
+    .nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-text); }
+    .nav-item.active { background: var(--sidebar-active); color: #fff; }
+    .nav-badge { margin-left: auto; background: #dc2626; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 99px; min-width: 18px; text-align: center; }
+    .nav-badge.amber { background: #d97706; }
+    .sidebar-footer { padding: 12px 10px; border-top: 1px solid #334155; font-size: 11px; color: var(--sidebar-muted); }
+    .sidebar-email { display: flex; align-items: center; gap: 6px; padding: 4px 2px; overflow: hidden; }
+    .sidebar-email span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* MAIN */
+    .main { flex: 1; overflow-y: auto; overscroll-behavior: contain; background: var(--bg); }
+    .page { display: none; padding: 24px; max-width: 1060px; margin: 0 auto; }
+    .page.active { display: block; }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+    .page-title { font-size: 18px; font-weight: 700; color: var(--text); }
+    .page-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* CARDS */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+    .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .kpi-value { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; font-variant-numeric: tabular-nums; }
+    .kpi-value.danger { color: var(--danger); }
+    .kpi-value.success { color: var(--success); }
+    .kpi-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    /* DIGEST */
+    .digest-card { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px; }
+    .digest-header { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1d4ed8; margin-bottom: 8px; }
+    .digest-date { margin-left: auto; font-size: 11px; font-weight: 400; color: #6b7280; }
+    .digest-body { font-size: 13px; color: #374151; line-height: 1.6; white-space: pre-wrap; }
+
+    /* FILTERS */
+    .filter-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pill { font-size: 11px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); cursor: pointer; background: var(--surface); color: var(--text-muted); font-weight: 500; transition: all .12s; }
+    .pill:hover { background: var(--surface2); }
+    .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* EMAIL ITEMS */
+    .email-list { display: flex; flex-direction: column; gap: 8px; }
+    .email-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start; transition: border-color .12s; }
+    .email-item.high-priority { border-left: 3px solid var(--danger); }
+    .email-item.medium-priority { border-left: 3px solid var(--warning); }
+    .email-item.low-priority { border-left: 3px solid var(--text-faint); }
+    .email-item.actioned { opacity: .55; background: var(--surface2); }
+    .email-icon { flex-shrink: 0; margin-top: 2px; }
+    .email-content { flex: 1; min-width: 0; }
+    .email-row1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .email-subject { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 420px; }
+    .email-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .email-snippet { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .email-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+    /* BADGES */
+    .badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; text-transform: capitalize; white-space: nowrap; }
+    .badge-requisition { background: #dbeafe; color: #1e40af; }
+    .badge-invoice { background: #fef3c7; color: #92400e; }
+    .badge-alert { background: #fee2e2; color: #991b1b; }
+    .badge-announcement { background: #ede9fe; color: #5b21b6; }
+    .badge-task { background: #d1fae5; color: #065f46; }
+    .badge-other { background: #f3f4f6; color: #4b5563; }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all .12s; font-family: inherit; }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: var(--surface); color: var(--text); border-color: var(--border); }
+    .btn-outline:hover { background: var(--surface2); }
+    .btn-ghost { background: transparent; color: var(--text-muted); border-color: transparent; padding: 5px 8px; }
+    .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+    .btn-success { background: transparent; color: var(--success); border-color: transparent; padding: 5px 8px; }
+    .btn-success:hover { background: #f0fdf4; }
+    .btn-danger { background: transparent; color: var(--danger); border-color: transparent; padding: 5px 8px; }
+    .btn-danger:hover { background: #fef2f2; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 48px 24px; border: 1px dashed var(--border); border-radius: var(--radius); }
+    .empty-state svg { margin: 0 auto 12px; opacity: .4; }
+    .empty-state-title { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    .empty-state-sub { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+
+    /* TASKS */
+    .task-group-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
+    .task-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start; margin-bottom: 7px; }
+    .task-item.done { opacity: .55; }
+    .task-body { flex: 1; min-width: 0; }
+    .task-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .task-item.done .task-title { text-decoration: line-through; color: var(--text-muted); }
+    .task-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .task-due { font-size: 11px; color: var(--warning); margin-top: 3px; font-weight: 500; }
+    .task-due.overdue { color: var(--danger); }
+    .task-actions { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+    .status-select { font-size: 11px; border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; background: var(--surface); font-family: inherit; cursor: pointer; color: var(--text); }
+
+    /* FORM */
+    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0; }
+    .form-input { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-family: inherit; background: var(--surface); color: var(--text); }
+    .form-input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+    .form-label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
+    .form-row { display: flex; gap: 8px; margin-top: 10px; }
+
+    /* SCHEDULE */
+    .pattern-group { margin-bottom: 20px; }
+    .pattern-group-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .pattern-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 14px; margin-bottom: 6px; display: flex; gap: 10px; align-items: flex-start; }
+    .pattern-body { flex: 1; min-width: 0; }
+    .pattern-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .pattern-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .badge-daily { background: #dbeafe; color: #1e40af; }
+    .badge-weekly { background: #d1fae5; color: #065f46; }
+    .badge-monthly { background: #fef3c7; color: #92400e; }
+    .badge-as-needed { background: #f3f4f6; color: #4b5563; }
+
+    /* SECTION TITLE */
+    .section-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+
+    /* ACTIONED SECTION */
+    .actioned-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); margin-bottom: 5px; opacity: .65; }
+    .actioned-item span { font-size: 12px; color: var(--text-muted); flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+    /* WUFAR */
+    .wufar-chip { display:inline-flex; align-items:center; gap:5px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px; padding:2px 7px; font-size:10px; font-weight:600; color:#166534; cursor:pointer; margin-top:5px; transition: background .12s; white-space:nowrap; }
+    .wufar-chip:hover { background:#dcfce7; }
+    .wufar-chip svg { flex-shrink:0; }
+    .wufar-block { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 12px; margin-top:8px; font-size:12px; }
+    .wufar-block-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#166534; margin-bottom:7px; display:flex; align-items:center; gap:5px; }
+    .wufar-code-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:5px; }
+    .wufar-code { background:#fff; border:1px solid #bbf7d0; border-radius:4px; padding:4px 8px; }
+    .wufar-code-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#4ade80; margin-bottom:1px; }
+    .wufar-code-val { font-size:13px; font-weight:700; color:#166534; font-variant-numeric:tabular-nums; }
+    .wufar-code-desc { font-size:10px; color:#166534; margin-top:1px; }
+    .wufar-code-note { font-size:11px; color:#166534; margin-top:5px; line-height:1.5; }
+    .wufar-confidence { font-size:9px; padding:1px 5px; border-radius:3px; font-weight:600; margin-left:auto; }
+    .wufar-confidence.high { background:#dcfce7; color:#166534; }
+    .wufar-confidence.medium { background:#fef9c3; color:#713f12; }
+    .wufar-confidence.low { background:#fee2e2; color:#991b1b; }
+
+    /* WUFAR MODAL */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; }
+    .modal-box { background:var(--surface); border-radius:10px; box-shadow:0 8px 32px rgba(0,0,0,.2); width:100%; max-width:560px; max-height:85vh; display:flex; flex-direction:column; }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--border); }
+    .modal-title { font-size:14px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
+    .modal-body { overflow-y:auto; padding:16px 18px; flex:1; }
+    .modal-footer { padding:12px 18px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
+    .wufar-search { width:100%; padding:8px 11px; border:1px solid var(--border); border-radius:6px; font-size:13px; font-family:inherit; margin-bottom:12px; }
+    .wufar-result-item { border:1px solid var(--border); border-radius:6px; padding:10px 12px; margin-bottom:8px; cursor:pointer; transition:border-color .12s; }
+    .wufar-result-item:hover { border-color:var(--primary); background:#eff6ff; }
+    .wufar-result-item.selected { border-color:#16a34a; background:#f0fdf4; }
+    .wufar-result-title { font-size:12px; font-weight:600; color:var(--text); }
+    .wufar-result-codes { font-size:11px; color:var(--text-muted); margin-top:3px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      .sidebar { width: 180px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-inner">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#2563eb"/>
+          <rect x="6" y="16" width="4" height="10" rx="1" fill="white" opacity=".85"/>
+          <rect x="14" y="10" width="4" height="16" rx="1" fill="white"/>
+          <rect x="22" y="6" width="4" height="20" rx="1" fill="white" opacity=".65"/>
+        </svg>
+        <div>
+          <div class="sidebar-logo-text">GDRH Finance</div>
+          <div class="sidebar-logo-sub">Inbox Hub</div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" id="nav-overview" onclick="showPage('overview')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+        <span class="nav-badge" id="badge-emails">0</span>
+      </a>
+      <a class="nav-item" id="nav-tasks" onclick="showPage('tasks')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Tasks
+        <span class="nav-badge amber" id="badge-tasks">0</span>
+      </a>
+      <a class="nav-item" id="nav-wufar" onclick="showPage('wufar')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        WUFAR Codes
+      </a>
+      <a class="nav-item" id="nav-schedule" onclick="showPage('schedule')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Job Schedule
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-email">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>adam.budnick@gdrh.org</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- OVERVIEW PAGE -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Inbox Overview</div>
+          <div class="page-subtitle" id="today-date"></div>
+        </div>
+        <button class="btn btn-outline" onclick="refreshBadges()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh
+        </button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Needs Attention</div>
+          <div class="kpi-value" id="kpi-unactioned">0</div>
+          <div class="kpi-hint">unread emails</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">High Priority</div>
+          <div class="kpi-value danger" id="kpi-high">0</div>
+          <div class="kpi-hint">urgent items</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Open Tasks</div>
+          <div class="kpi-value" id="kpi-tasks">0</div>
+          <div class="kpi-hint">in queue</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Completed</div>
+          <div class="kpi-value success" id="kpi-done">0</div>
+          <div class="kpi-hint">items actioned</div>
+        </div>
+      </div>
+
+      <!-- DIGEST -->
+      <div class="digest-card">
+        <div class="digest-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Latest Daily Digest
+          <span class="digest-date">Mon, Mar 16 · 7:56 AM</span>
+        </div>
+        <div class="digest-body">Monday, March 16 — School is closed today (blizzard warning for Milwaukee County). You have 2 requisitions awaiting approval from Brandon Leslie ($70.14 and $108.09 for Speedway gas). Anthem Blue Cross invoice is due today. US Bank SinglePoint had ~1 hour of downtime yesterday but is now operational. 4 tasks in queue — highest priority: requisition approvals and Anthem invoice.</div>
+      </div>
+
+      <!-- EMAIL ITEMS -->
+      <div class="filter-row">
+        <div class="section-title">Emails Needing Attention</div>
+        <div class="filter-pills" id="email-filters"></div>
+      </div>
+      <div class="email-list" id="email-list"></div>
+
+      <!-- ACTIONED -->
+      <div id="actioned-section" style="display:none; margin-top:20px;">
+        <div class="section-title" style="color:var(--text-muted); font-size:12px; margin-bottom:8px;">Recently Actioned</div>
+        <div id="actioned-list"></div>
+      </div>
+
+      <div style="text-align:center; padding: 24px 0 8px; font-size:11px; color:var(--text-faint);">
+        <a href="https://www.perplexity.ai/computer" target="_blank" style="color:inherit; text-decoration:none;">Created with Perplexity Computer</a>
+      </div>
+    </div>
+
+    <!-- TASKS PAGE -->
+    <div class="page" id="page-tasks">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Tasks</div>
+          <div class="page-subtitle" id="tasks-subtitle">0 open · 0 completed</div>
+        </div>
+        <button class="btn btn-primary" onclick="toggleTaskForm()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Task
+        </button>
+      </div>
+
+      <!-- Task form -->
+      <div class="form-card" id="task-form" style="display:none;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:10px;">New Task</div>
+        <input class="form-input" id="tf-title" placeholder="Task title" />
+        <input class="form-input" id="tf-desc" placeholder="Description (optional)" style="margin-top:7px;" />
+        <div class="form-grid">
+          <div>
+            <label class="form-label">Category</label>
+            <select class="form-input" id="tf-cat">
+              <option value="general">General</option>
+              <option value="requisition">Requisition</option>
+              <option value="invoice">Invoice</option>
+              <option value="report">Report</option>
+              <option value="meeting">Meeting</option>
+              <option value="compliance">Compliance</option>
+              <option value="food-service">Food Service</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Priority</label>
+            <select class="form-input" id="tf-priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Due Date</label>
+            <input class="form-input" type="date" id="tf-due" />
+          </div>
+        </div>
+        <div class="form-row">
+          <button class="btn btn-primary btn-sm" onclick="addTask()">Add Task</button>
+          <button class="btn btn-outline btn-sm" onclick="toggleTaskForm()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Status filter -->
+      <div class="filter-pills" style="margin-bottom:14px;" id="task-filters"></div>
+
+      <div id="task-list"></div>
+
+      <div style="text-align:center; padding: 24px 0 8px; font-size:11px; color:var(--text-faint);">
+        <a href="https://www.perplexity.ai/computer" target="_blank" style="color:inherit; text-decoration:none;">Created with Perplexity Computer</a>
+      </div>
+    </div>
+
+    <!-- WUFAR LOOKUP PAGE -->
+    <div class="page" id="page-wufar">
+      <div class="page-header">
+        <div>
+          <div class="page-title">WUFAR Code Lookup</div>
+          <div class="page-subtitle">Wisconsin Uniform Financial Accounting Requirements — recommend object &amp; function codes for purchases</div>
+        </div>
+      </div>
+
+      <!-- Quick lookup -->
+      <div class="card" style="padding:16px 18px; margin-bottom:18px;">
+        <div class="section-title" style="margin-bottom:10px;">Quick Lookup</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;">
+          <div style="flex:1; min-width:200px;">
+            <label class="form-label">Describe the purchase</label>
+            <input class="form-input" id="wufar-query" placeholder="e.g., gas for truck, office supplies, software license..." onkeydown="if(event.key==='Enter')lookupWufarManual()" />
+          </div>
+          <div style="min-width:150px;">
+            <label class="form-label">Fund</label>
+            <select class="form-input" id="wufar-fund">
+              <option value="10">10 — General Fund</option>
+              <option value="50">50 — Food Service Fund</option>
+              <option value="27">27 — Special Education Fund</option>
+              <option value="80">80 — Community Service Fund</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="lookupWufarManual()">Look Up</button>
+        </div>
+        <div id="wufar-manual-result" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Common codes table -->
+      <div class="card" style="padding:16px 18px; margin-bottom:18px;">
+        <div class="section-title" style="margin-bottom:12px;">Common GDRH Purchase Codes</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                <th style="padding:6px 10px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);">Purchase Type</th>
+                <th style="padding:6px 10px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);">Object Code</th>
+                <th style="padding:6px 10px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);">Function Code</th>
+                <th style="padding:6px 10px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);">Fund</th>
+                <th style="padding:6px 10px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="wufar-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Code reference -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div class="card" style="padding:14px 16px;">
+          <div class="section-title" style="margin-bottom:10px;">Object Code Series</div>
+          <div id="wufar-obj-ref"></div>
+        </div>
+        <div class="card" style="padding:14px 16px;">
+          <div class="section-title" style="margin-bottom:10px;">Function Code Series</div>
+          <div id="wufar-fn-ref"></div>
+        </div>
+      </div>
+
+      <div style="text-align:center; padding: 24px 0 8px; font-size:11px; color:var(--text-faint);">
+        <a href="https://www.perplexity.ai/computer" target="_blank" style="color:inherit; text-decoration:none;">Created with Perplexity Computer</a>
+      </div>
+    </div>
+
+    <!-- SCHEDULE PAGE -->
+    <div class="page" id="page-schedule">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Job Schedule</div>
+          <div class="page-subtitle">Recurring responsibilities — your role map</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="togglePatternForm()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Job
+        </button>
+      </div>
+
+      <!-- Schedule KPIs -->
+      <div class="kpi-grid" style="grid-template-columns: repeat(3,1fr); margin-bottom:20px;">
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:#1d4ed8;">Daily</div>
+          <div class="kpi-value" id="sched-daily">0</div>
+          <div class="kpi-hint">recurring tasks</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:#065f46;">Weekly</div>
+          <div class="kpi-value" id="sched-weekly">0</div>
+          <div class="kpi-hint">recurring tasks</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label" style="color:#92400e;">Monthly</div>
+          <div class="kpi-value" id="sched-monthly">0</div>
+          <div class="kpi-hint">recurring tasks</div>
+        </div>
+      </div>
+
+      <!-- Pattern form -->
+      <div class="form-card" id="pattern-form" style="display:none;">
+        <div style="font-size:13px; font-weight:600; margin-bottom:10px;">Add Job Pattern</div>
+        <input class="form-input" id="pf-name" placeholder="Job name (e.g., Requisition Approvals)" />
+        <input class="form-input" id="pf-desc" placeholder="Description" style="margin-top:7px;" />
+        <div class="form-grid" style="margin-top:8px;">
+          <div>
+            <label class="form-label">Frequency</label>
+            <select class="form-input" id="pf-freq">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="as-needed">As Needed</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Category</label>
+            <input class="form-input" id="pf-cat" placeholder="e.g., Accounts Payable" />
+          </div>
+        </div>
+        <div class="form-row">
+          <button class="btn btn-primary btn-sm" onclick="addPattern()">Add</button>
+          <button class="btn btn-outline btn-sm" onclick="togglePatternForm()">Cancel</button>
+        </div>
+      </div>
+
+      <div id="schedule-list"></div>
+
+      <div style="text-align:center; padding: 24px 0 8px; font-size:11px; color:var(--text-faint);">
+        <a href="https://www.perplexity.ai/computer" target="_blank" style="color:inherit; text-decoration:none;">Created with Perplexity Computer</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ---- WUFAR ENGINE ----
+// Object codes: what is being purchased
+const WUFAR_OBJECTS = {
+  '411': { desc: 'General Supplies', keywords: ['supplies', 'supply', 'paper', 'office supplies', 'cleaning', 'janitorial', 'miscellaneous', 'misc', 'materials'] },
+  '415': { desc: 'Food', keywords: ['food', 'meal', 'groceries', 'snack', 'breakfast', 'lunch', 'dairy', 'produce', 'commodity', 'catering'] },
+  '420': { desc: 'Apparel', keywords: ['apparel', 'uniform', 'clothing', 'shirt', 'jersey', 'jacket', 'gear', 'vest'] },
+  '344': { desc: 'Vehicle Fuel', keywords: ['gas', 'fuel', 'gasoline', 'diesel', 'petrol', 'speedway', 'superamerica', 'kwiktrip', 'fleet'] },
+  '325': { desc: 'Vehicle & Equipment Rental', keywords: ['vehicle rental', 'car rental', 'truck rental', 'equipment rental', 'rental car'] },
+  '310': { desc: 'Contracted Services', keywords: ['contracted', 'contract', 'service agreement', 'consultant', 'consulting', 'professional services', 'vendor service', 'repair service', 'maintenance service', 'inspection'] },
+  '321': { desc: 'Technology Repairs & Maintenance', keywords: ['computer repair', 'tech repair', 'it maintenance', 'device repair', 'chromebook repair', 'tablet repair', 'phone repair'] },
+  '322': { desc: 'Rentals — Computers & Tech', keywords: ['computer rental', 'tech rental', 'ipad rental', 'chromebook rental', 'device lease'] },
+  '324': { desc: 'Non-Tech Repairs & Maintenance', keywords: ['building repair', 'hvac', 'plumbing', 'electrical', 'flooring', 'roof', 'window repair', 'door repair', 'equipment maintenance', 'boiler'] },
+  '328': { desc: 'Building Rental', keywords: ['facility rental', 'room rental', 'building rental', 'hall rental', 'venue rental', 'space rental'] },
+  '331': { desc: 'Gas for Heat', keywords: ['gas heat', 'natural gas', 'heating gas', 'wps', 'we energies gas'] },
+  '336': { desc: 'Electricity', keywords: ['electricity', 'electric', 'power bill', 'we energies electric', 'utility electricity'] },
+  '337': { desc: 'Water', keywords: ['water', 'water bill', 'water utility'] },
+  '338': { desc: 'Sewerage', keywords: ['sewer', 'sewerage', 'wastewater'] },
+  '342': { desc: 'Employee Travel', keywords: ['travel', 'mileage', 'reimbursement', 'conference travel', 'hotel', 'lodging', 'airfare', 'flight', 'train', 'bus pass'] },
+  '341': { desc: 'Pupil Transportation', keywords: ['bus', 'field trip bus', 'student transportation', 'pupil transport'] },
+  '351': { desc: 'Advertising', keywords: ['advertising', 'ad', 'marketing', 'promotion', 'newspaper ad', 'social media ad'] },
+  '353': { desc: 'Postage', keywords: ['postage', 'stamps', 'shipping', 'fedex', 'ups', 'usps', 'mail'] },
+  '354': { desc: 'Printing & Binding', keywords: ['printing', 'print', 'copy', 'binding', 'flyer', 'brochure', 'newsletter', 'poster'] },
+  '355': { desc: 'Telephone', keywords: ['telephone', 'phone', 'cell phone', 'mobile', 'landline', 'telecom', 'communication bill'] },
+  '358': { desc: 'Internet Access', keywords: ['internet', 'broadband', 'wifi', 'network', 'isp', 'spectrum', 'at&t internet'] },
+  '361': { desc: 'Technology Services', keywords: ['tech services', 'it services', 'managed services', 'helpdesk', 'cloud services', 'hosting', 'server', 'network support'] },
+  '362': { desc: 'Software as a Service (SaaS)', keywords: ['saas', 'subscription', 'software subscription', 'google workspace', 'microsoft 365', 'zoom', 'docusign', 'software service', 'online service', 'platform fee', 'app subscription'] },
+  '471': { desc: 'Textbooks', keywords: ['textbook', 'text book', 'curriculum materials', 'student book', 'reading material'] },
+  '480': { desc: 'Non-Capital Technology (general)', keywords: ['technology', 'tech purchase', 'electronics'] },
+  '481': { desc: 'Technology Supplies', keywords: ['cables', 'batteries', 'charger', 'mouse', 'keyboard', 'headset', 'tech supplies', 'toner', 'ink cartridge'] },
+  '482': { desc: 'Non-Capital Technology Hardware', keywords: ['laptop', 'chromebook', 'computer', 'tablet', 'ipad', 'monitor', 'projector', 'printer', 'scanner', 'hardware', 'webcam', 'switch', 'router', 'access point'] },
+  '483': { desc: 'Non-Capital Software', keywords: ['software', 'license', 'app', 'program', 'application', 'antivirus', 'plugin'] },
+  '444': { desc: 'Furnishings', keywords: ['furniture', 'chair', 'desk', 'table', 'bookshelf', 'cabinet', 'locker', 'filing cabinet', 'couch', 'furnishing'] },
+  '446': { desc: 'Tools & Implements', keywords: ['tools', 'tool', 'implement', 'drill', 'saw', 'hammer', 'shovel', 'rake', 'snow blower', 'mower', 'landscaping equipment', 'maintenance tools'] },
+  '551': { desc: 'Equipment Purchase (capital)', keywords: ['capital equipment', 'new equipment', 'vehicle purchase', 'tractor', 'truck purchase', 'large equipment'] },
+  '581': { desc: 'Capital Technology Hardware', keywords: ['capital technology', 'server purchase', 'network infrastructure', 'capital hardware'] },
+  '582': { desc: 'Capital Software', keywords: ['capital software', 'skyward license', 'erp license', 'major software'] },
+  '240': { desc: 'Health Insurance', keywords: ['health insurance', 'anthem', 'anthem blue cross', 'medical insurance', 'dental insurance', 'vision insurance', 'benefit premium', 'insurance premium'] },
+  '730': { desc: 'Unemployment Compensation', keywords: ['unemployment', 'unemployment comp'] },
+  '711': { desc: 'District Liability Insurance', keywords: ['liability insurance', 'general liability'] },
+  '712': { desc: 'District Property Insurance', keywords: ['property insurance', 'building insurance'] },
+};
+
+// Function codes: purpose/department for which item is purchased
+const WUFAR_FUNCTIONS = {
+  '252000': { desc: 'Fiscal Services', keywords: ['finance', 'fiscal', 'accounting', 'budget', 'payroll', 'financial', 'accounts payable', 'invoice', 'payment', 'banking', 'bookkeeping', 'audit'] },
+  '253000': { desc: 'Operations (Buildings & Grounds)', keywords: ['operations', 'building', 'grounds', 'custodial', 'janitor', 'facilities', 'maintenance supplies', 'cleaning', 'janitorial', 'hvac', 'plumbing', 'electrical', 'landscaping', 'snow', 'lawn', 'mowing', 'fuel', 'gas for truck', 'gas for tractor', 'vehicle', 'truck', 'tractor', 'bus maintenance'] },
+  '254000': { desc: 'Maintenance', keywords: ['repair', 'maintenance', 'fix', 'replace', 'upkeep', 'refurbish', 'overhaul'] },
+  '256200': { desc: 'District-Operated Pupil Transportation', keywords: ['school bus', 'bus route', 'student bus', 'pupil transport', 'field trip bus'] },
+  '257200': { desc: 'Food Preparation & Dispensing', keywords: ['food service', 'cafeteria', 'kitchen', 'meal prep', 'food preparation', 'food supplies', 'cooking', 'food', 'meal', 'lunch program', 'breakfast program', 'nutrition'] },
+  '257100': { desc: 'Direction of Food Services', keywords: ['food service management', 'nutrition director', 'food service admin'] },
+  '241000': { desc: 'Office of the Principal', keywords: ['principal', 'school administration', 'school office', 'office of principal'] },
+  '232000': { desc: 'District Administration', keywords: ['superintendent', 'district admin', 'board', 'district office', 'central office', 'district-wide', 'district administration'] },
+  '251000': { desc: 'Direction of Business', keywords: ['business office', 'business administration', 'business services'] },
+  '221000': { desc: 'Improvement of Instruction', keywords: ['curriculum', 'instruction', 'professional development', 'staff training', 'teacher training', 'pd', 'workshop', 'conference', 'classroom', 'instructional'] },
+  '221300': { desc: 'Instructional Staff Training', keywords: ['staff training', 'pd day', 'professional development', 'training session', 'workshop', 'conference registration'] },
+  '222000': { desc: 'Library Media', keywords: ['library', 'media center', 'books', 'periodicals', 'audiovisual', 'library materials', 'library resources'] },
+  '120000': { desc: 'Regular Curriculum', keywords: ['classroom supplies', 'student materials', 'art supplies', 'science lab', 'math materials', 'teacher supplies', 'regular curriculum'] },
+  '162000': { desc: 'Athletic/Sport (Co-Curricular)', keywords: ['athletic', 'sports', 'football', 'basketball', 'baseball', 'volleyball', 'soccer', 'track', 'swimming', 'gym equipment', 'athletic equipment', 'sport', 'athletic supplies', 'jersey', 'uniform'] },
+  '213000': { desc: 'Counseling', keywords: ['counseling', 'guidance', 'counselor', 'mental health'] },
+  '214000': { desc: 'Health Services', keywords: ['nurse', 'health services', 'medical supplies', 'first aid', 'ppe', 'health office', 'covid', 'health'] },
+  '295000': { desc: 'Administrative Technology Services', keywords: ['administrative technology', 'district it', 'technology services', 'it department', 'tech department', 'network', 'server', 'administrative software', 'skyward', 'erp', 'google workspace', 'microsoft'] },
+  '264000': { desc: 'Staff Services (HR)', keywords: ['hr', 'human resources', 'recruitment', 'hiring', 'staff', 'employee', 'background check', 'job posting', 'personnel'] },
+  '231000': { desc: 'School Board', keywords: ['school board', 'board meeting', 'board member', 'election', 'audit', 'legal'] },
+  '270000': { desc: 'Insurance & Judgments', keywords: ['insurance premium', 'liability', 'property insurance', 'district insurance', 'anthem', 'health insurance', 'benefit', 'workers comp', 'unemployment'] },
+  '256700': { desc: 'Contracted Pupil Transportation', keywords: ['contracted bus', 'contracted transportation', 'transportation contractor', 'special ed transport'] },
+  '160000': { desc: 'Co-Curricular Activities', keywords: ['co-curricular', 'extracurricular', 'club', 'activity', 'student activity', 'dc trip', 'dc fundraiser', 'field trip', 'student travel', 'washington dc', 'dc scholarship'] },
+  '258200': { desc: 'Purchasing / Warehouse', keywords: ['warehouse', 'storage', 'purchasing department', 'central purchasing'] },
+  '263000': { desc: 'Information Services', keywords: ['communications', 'public information', 'public relations', 'newsletter', 'website', 'social media management'] },
+};
+
+// Source codes (revenue origins — used for revenue transactions)
+const WUFAR_SOURCES = {
+  '251': { desc: 'Student Meal Sales', fund: '50', keywords: ['student meal', 'student lunch', 'student breakfast', 'meal payment'] },
+  '252': { desc: 'Adult Meal Sales', fund: '50', keywords: ['adult meal', 'staff meal', 'adult lunch'] },
+  '259': { desc: 'A la Carte / Catering Sales', fund: '50', keywords: ['a la carte', 'catering revenue', 'catering sales'] },
+  '280': { desc: 'Earnings on Investments', fund: '10', keywords: ['investment', 'interest income', 'investment earnings'] },
+  '617': { desc: 'State Reimbursement (Food Service)', fund: '50', keywords: ['state reimbursement', 'state aid food', 'cacfp', 'nslp state'] },
+  '717': { desc: 'Federal Reimbursement (Food Service)', fund: '50', keywords: ['federal reimbursement', 'usda', 'nslp', 'federal food'] },
+};
+
+// Common purchase patterns at GDRH
+const COMMON_PURCHASES = [
+  { label:'Vehicle Fuel (truck/tractor)', obj:'344', fn:'253000', fund:'10', note:'Common: gas/diesel at Speedway for district vehicles used in operations/grounds work.' },
+  { label:'General Office Supplies', obj:'411', fn:'252000', fund:'10', note:'Office supplies for business/finance office.' },
+  { label:'Classroom Supplies', obj:'411', fn:'120000', fund:'10', note:'General classroom supplies for instructional use.' },
+  { label:'Food Service Supplies', obj:'411', fn:'257200', fund:'50', note:'Non-food supplies for cafeteria operations (Fund 50).' },
+  { label:'Food / Groceries (cafeteria)', obj:'415', fn:'257200', fund:'50', note:'Food products for school lunch/breakfast programs (Fund 50).' },
+  { label:'Health Insurance Premium (Anthem)', obj:'240', fn:'270000', fund:'10', note:'Monthly Anthem Blue Cross health insurance premium payment.' },
+  { label:'Software / SaaS Subscription', obj:'362', fn:'295000', fund:'10', note:'Cloud/SaaS software for district admin or IT (Skyward, Google, etc.).' },
+  { label:'Non-Capital Computer Hardware', obj:'482', fn:'295000', fund:'10', note:'Laptops, Chromebooks, monitors under capitalization threshold.' },
+  { label:'Technology Supplies (cables, accessories)', obj:'481', fn:'295000', fund:'10', note:'Tech accessories and supplies.' },
+  { label:'Building/HVAC Maintenance', obj:'324', fn:'254000', fund:'10', note:'Non-technology repairs and maintenance to buildings.' },
+  { label:'Facility Rental (revenue)', obj:'328', fn:'253000', fund:'10', note:'If district is renting out facilities; use as object for rental-related costs.' },
+  { label:'Employee Travel / Mileage', obj:'342', fn:'252000', fund:'10', note:'Employee mileage reimbursement or conference travel for finance/admin staff.' },
+  { label:'Postage / Shipping', obj:'353', fn:'252000', fund:'10', note:'Postage and shipping for business office correspondence.' },
+  { label:'Printing & Copying', obj:'354', fn:'252000', fund:'10', note:'Printing, binding, and copying for business office documents.' },
+  { label:'Athletic Equipment / Uniforms', obj:'420', fn:'162000', fund:'10', note:'Uniforms and apparel for athletic programs.' },
+  { label:'Professional Development / Training', obj:'342', fn:'221300', fund:'10', note:'Conference registration + travel for professional development.' },
+  { label:'Student Field Trip Transportation', obj:'341', fn:'256700', fund:'10', note:'Contracted bus transportation for student field trips.' },
+  { label:'DC Fundraiser / Student Travel Costs', obj:'411', fn:'160000', fund:'10', note:'Supplies and expenses related to co-curricular DC trip/fundraiser.' },
+];
+
+function wufarKeywordMatch(text, keywords) {
+  const t = text.toLowerCase();
+  let score = 0;
+  for (const kw of keywords) {
+    if (t.includes(kw.toLowerCase())) score += kw.split(' ').length; // longer match = higher score
+  }
+  return score;
+}
+
+function getWufarRecommendation(descText, fund) {
+  const text = descText.toLowerCase();
+  // Score all objects
+  let bestObj = null, bestObjScore = 0;
+  for (const [code, info] of Object.entries(WUFAR_OBJECTS)) {
+    const s = wufarKeywordMatch(text, info.keywords);
+    if (s > bestObjScore) { bestObjScore = s; bestObj = { code, ...info }; }
+  }
+  // Score all functions
+  let bestFn = null, bestFnScore = 0;
+  for (const [code, info] of Object.entries(WUFAR_FUNCTIONS)) {
+    const s = wufarKeywordMatch(text, info.keywords);
+    if (s > bestFnScore) { bestFnScore = s; bestFn = { code, ...info }; }
+  }
+  // Confidence
+  const totalScore = bestObjScore + bestFnScore;
+  const confidence = totalScore >= 4 ? 'high' : totalScore >= 2 ? 'medium' : 'low';
+  // Also suggest source codes if revenue-related
+  let sourceSuggestion = null;
+  for (const [code, info] of Object.entries(WUFAR_SOURCES)) {
+    if (wufarKeywordMatch(text, info.keywords) > 0) { sourceSuggestion = { code, ...info }; break; }
+  }
+  return {
+    object: bestObj || { code: '411', desc: 'General Supplies' },
+    function: bestFn || { code: '252000', desc: 'Fiscal Services' },
+    confidence,
+    fundCode: fund || '10',
+    source: sourceSuggestion,
+  };
+}
+
+function wufarChipHTML(rec, itemId, mode) {
+  // mode: 'email' or 'task'
+  const cLabel = rec.confidence === 'high' ? '✓ High confidence' : rec.confidence === 'medium' ? '~ Medium confidence' : '? Low confidence';
+  return `<div class="wufar-block" id="wufar-${mode}-${itemId}">
+    <div class="wufar-block-title">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      WUFAR Recommendation
+      <span class="wufar-confidence ${rec.confidence}">${cLabel}</span>
+    </div>
+    <div class="wufar-code-row">
+      <div class="wufar-code">
+        <div class="wufar-code-label">Fund</div>
+        <div class="wufar-code-val">${rec.fundCode}</div>
+        <div class="wufar-code-desc">${rec.fundCode==='10'?'General Fund':rec.fundCode==='50'?'Food Service':rec.fundCode==='27'?'Special Ed':rec.fundCode==='80'?'Community Service':'General Fund'}</div>
+      </div>
+      <div class="wufar-code">
+        <div class="wufar-code-label">Object</div>
+        <div class="wufar-code-val">${rec.object.code}</div>
+        <div class="wufar-code-desc">${rec.object.desc}</div>
+      </div>
+      <div class="wufar-code">
+        <div class="wufar-code-label">Function</div>
+        <div class="wufar-code-val">${rec.function.code}</div>
+        <div class="wufar-code-desc">${rec.function.desc}</div>
+      </div>
+    </div>
+    <div class="wufar-code-note">Full code: <strong>${rec.fundCode}-E-800-${rec.object.code}-${rec.function.code}</strong>${rec.source ? ` · Revenue Source: <strong>${rec.source.code} (${rec.source.desc})</strong>` : ''}</div>
+  </div>`;
+}
+
+function lookupWufarManual() {
+  const q = document.getElementById('wufar-query').value.trim();
+  const fund = document.getElementById('wufar-fund').value;
+  const el = document.getElementById('wufar-manual-result');
+  if (!q) { el.innerHTML = '<span style="font-size:12px; color:var(--text-muted);">Enter a purchase description above.</span>'; return; }
+  const rec = getWufarRecommendation(q, fund);
+  el.innerHTML = wufarChipHTML(rec, 'manual', 'manual');
+}
+
+function renderWufarPage() {
+  // Table
+  const tbody = document.getElementById('wufar-table-body');
+  tbody.innerHTML = COMMON_PURCHASES.map(p => `<tr style="border-bottom:1px solid var(--border);">
+    <td style="padding:7px 10px; font-size:12px; font-weight:500;">${p.label}</td>
+    <td style="padding:7px 10px;"><span style="font-weight:700; color:#166534;">${p.obj}</span> <span style="font-size:10px; color:var(--text-muted);">${WUFAR_OBJECTS[p.obj]?.desc||''}</span></td>
+    <td style="padding:7px 10px;"><span style="font-weight:700; color:#1d4ed8;">${p.fn}</span> <span style="font-size:10px; color:var(--text-muted);">${WUFAR_FUNCTIONS[p.fn]?.desc||''}</span></td>
+    <td style="padding:7px 10px; font-size:11px; color:var(--text-muted);">${p.fund}</td>
+    <td style="padding:7px 10px; font-size:11px; color:var(--text-muted);">${p.note}</td>
+  </tr>`).join('');
+
+  // Object ref
+  const objSeries = [
+    { range: '100s', name: 'Salaries', color: '#dbeafe' },
+    { range: '200s', name: 'Employee Benefits', color: '#ede9fe' },
+    { range: '300s', name: 'Purchased Services', color: '#fef3c7' },
+    { range: '400s', name: 'Non-Capital Objects', color: '#d1fae5' },
+    { range: '500s', name: 'Capital Objects', color: '#fee2e2' },
+    { range: '700s', name: 'Insurance & Judgments', color: '#fce7f3' },
+    { range: '900s', name: 'Other Objects', color: '#f3f4f6' },
+  ];
+  document.getElementById('wufar-obj-ref').innerHTML = objSeries.map(s => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:7px; font-size:12px;"><span style="background:${s.color}; border-radius:3px; padding:1px 6px; font-weight:700; font-size:11px; min-width:38px; text-align:center;">${s.range}</span><span>${s.name}</span></div>`).join('');
+
+  // Function ref
+  const fnSeries = [
+    { range: '100000', name: 'Instruction', color: '#dbeafe' },
+    { range: '200000', name: 'Support Services', color: '#d1fae5' },
+    { range: '252000', name: '→ Business Administration', color: '#f0fdf4' },
+    { range: '253000', name: '→ Operations', color: '#f0fdf4' },
+    { range: '256000', name: '→ Pupil Transportation', color: '#f0fdf4' },
+    { range: '257000', name: '→ Food Services', color: '#f0fdf4' },
+    { range: '300000', name: 'Community Services', color: '#fef3c7' },
+    { range: '400000', name: 'Non-Program Transactions', color: '#fee2e2' },
+  ];
+  document.getElementById('wufar-fn-ref').innerHTML = fnSeries.map(s => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:7px; font-size:12px;"><span style="background:${s.color}; border-radius:3px; padding:1px 6px; font-weight:700; font-size:11px; min-width:60px; text-align:center;">${s.range}</span><span>${s.name}</span></div>`).join('');
+}
+
+// ---- DATA ----
+let emailItems = [
+  { id:'e1', emailId:'req1', subject:'Requisition Awaiting Approval: 2532526265 — Gas for truck/tractor', from_:'BRANDON.LESLIE@gdrh.org', date:'2026-03-15T19:02:37Z', snippet:'Amount: $108.09. Vendor: SPEEDWAY/SUPERAMERICA. Description: gas for truck and tractor. Log into Skyward to approve.', category:'requisition', priority:'high', isActioned:false },
+  { id:'e2', emailId:'req2', subject:'Requisition Awaiting Approval: 2532526265 — Gas for truck', from_:'BRANDON.LESLIE@gdrh.org', date:'2026-03-15T18:49:37Z', snippet:'Amount: $70.14. Vendor: SPEEDWAY/SUPERAMERICA. Description: gas for truck. Log into Skyward to approve.', category:'requisition', priority:'high', isActioned:false },
+  { id:'e3', emailId:'anthem', subject:'ANTHEM BLUE CROSS INVOICE — Due Today', from_:'Calendar Reminder (adam.budnick@gdrh.org)', date:'2026-03-16T06:00:00Z', snippet:'Monthly Anthem Blue Cross health insurance invoice is due today. Process payment via US Bank SinglePoint.', category:'invoice', priority:'high', isActioned:false },
+  { id:'e4', emailId:'usbank', subject:'U.S. Bank | SinglePoint has come back up', from_:'SinglePointAlerts@hund.io', date:'2026-03-15T22:11:50Z', snippet:'Affected Service: SinglePoint — Status: Operational. Downtime Duration: about 1 hour.', category:'alert', priority:'medium', isActioned:false },
+  { id:'e5', emailId:'closure', subject:'School Closed March 16, 2026', from_:'Glendale-River Hills SD via ParentSquare', date:'2026-03-16T01:02:49Z', snippet:'Blizzard Warning for Milwaukee County. School closed Monday, March 16. No virtual learning. All afterschool activities cancelled.', category:'announcement', priority:'low', isActioned:false },
+  { id:'e6', emailId:'dc', subject:'Provide financial updates — DC fundraiser and DC scholarship', from_:'Calendar Reminder (adam.budnick@gdrh.org)', date:'2026-03-19T15:00:00Z', snippet:'Scheduled task: Provide financial updates for DC fundraiser and DC scholarship funds by Thursday, March 19.', category:'task', priority:'medium', isActioned:false },
+];
+
+let tasks = [
+  { id:'t1', title:'Approve Requisition — Gas for truck/tractor ($108.09)', description:'Submitted by Brandon Leslie. Vendor: Speedway/SuperAmerica. Log into Skyward to approve.', category:'requisition', priority:'high', status:'todo', dueDate:'2026-03-17' },
+  { id:'t2', title:'Process Anthem Blue Cross Invoice', description:'Monthly health insurance invoice. Pay via US Bank SinglePoint.', category:'invoice', priority:'high', status:'todo', dueDate:'2026-03-16' },
+  { id:'t3', title:'Check PayPal and transfer funds to checking', description:'Weekly transfer from PayPal to district checking account.', category:'general', priority:'medium', status:'todo', dueDate:'2026-03-17' },
+  { id:'t4', title:'Provide DC fundraiser & scholarship financial update', description:'Prepare and deliver financial update report for DC fundraiser and DC scholarship funds.', category:'report', priority:'medium', status:'todo', dueDate:'2026-03-19' },
+];
+
+let patterns = [
+  { id:'p1', name:'Requisition Approvals (Skyward)', description:'Review and approve purchase requisitions submitted by staff via Skyward', frequency:'daily', category:'Accounts Payable', count:5 },
+  { id:'p2', name:'Anthem Blue Cross Invoice', description:'Process monthly health insurance invoice payment via US Bank SinglePoint', frequency:'monthly', category:'Accounts Payable', count:2 },
+  { id:'p3', name:'US Bank SinglePoint Monitoring', description:'Monitor bank system status and respond to outage/restoration alerts', frequency:'daily', category:'Banking', count:4 },
+  { id:'p4', name:'PayPal Transfer to Checking', description:'Check PayPal balance and transfer funds to district checking account', frequency:'weekly', category:'Banking', count:3 },
+  { id:'p5', name:'DC Fundraiser Financial Updates', description:'Provide financial updates on DC fundraiser and scholarship funds', frequency:'as-needed', category:'Reporting', count:2 },
+  { id:'p6', name:'Purchase Order Processing', description:'Review and process purchase orders across all departments', frequency:'daily', category:'Accounts Payable', count:1 },
+  { id:'p7', name:'Student Fee Reconciliation', description:'Reconcile student fee payments and update accounting records', frequency:'monthly', category:'Student Accounts', count:1 },
+  { id:'p8', name:'Food Service Accounting', description:'Monthly food service meal pricing review and accounting reconciliation', frequency:'monthly', category:'Food Service', count:1 },
+  { id:'p9', name:'1099 Reporting', description:'Annual 1099 tax document preparation and filing for vendors', frequency:'monthly', category:'Tax Compliance', count:1 },
+  { id:'p10', name:'WUFAR Coding Review', description:'Wisconsin Uniform Financial Accounting Requirements compliance review', frequency:'monthly', category:'Compliance', count:1 },
+  { id:'p11', name:'Facility Rental Management', description:'Process facility rental requests, agreements, and fee collection', frequency:'as-needed', category:'Operations', count:1 },
+  { id:'p12', name:'GASB 103 Financial Reporting', description:'GASB 103 compliant financial statement preparation and submission', frequency:'monthly', category:'Reporting', count:1 },
+];
+
+let idCounter = 100;
+function newId(prefix) { return prefix + (++idCounter); }
+
+let activeFilter = 'all';
+let activeTaskFilter = 'all';
+let taskFormOpen = false;
+let patternFormOpen = false;
+
+// ---- INIT ----
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  renderAll();
+});
+
+function renderAll() { renderEmailList(); renderTaskList(); renderSchedule(); renderWufarPage(); refreshBadges(); }
+
+// ---- NAVIGATION ----
+function showPage(name) {
+  ['overview','tasks','schedule','wufar'].forEach(p => {
+    document.getElementById('page-'+p).classList.toggle('active', p === name);
+    document.getElementById('nav-'+p).classList.toggle('active', p === name);
+  });
+}
+
+// ---- BADGES ----
+function refreshBadges() {
+  const unactioned = emailItems.filter(e => !e.isActioned);
+  const pendingTasks = tasks.filter(t => t.status !== 'done');
+  document.getElementById('badge-emails').textContent = unactioned.length;
+  document.getElementById('badge-tasks').textContent = pendingTasks.length;
+  document.getElementById('kpi-unactioned').textContent = unactioned.length;
+  document.getElementById('kpi-high').textContent = unactioned.filter(e => e.priority === 'high').length;
+  document.getElementById('kpi-tasks').textContent = pendingTasks.length;
+  document.getElementById('kpi-done').textContent = emailItems.filter(e => e.isActioned).length;
+  document.getElementById('tasks-subtitle').textContent = pendingTasks.length + ' open · ' + tasks.filter(t => t.status === 'done').length + ' completed';
+}
+
+// ---- EMAIL LIST ----
+function renderEmailList() {
+  const unactioned = emailItems.filter(e => !e.isActioned);
+  const actioned = emailItems.filter(e => e.isActioned);
+  const cats = ['all', ...new Set(unactioned.map(e => e.category))];
+
+  // Filters
+  const filterContainer = document.getElementById('email-filters');
+  filterContainer.innerHTML = cats.map(c => `<button class="pill${activeFilter===c?' active':''}" onclick="setEmailFilter('${c}')">${c}</button>`).join('');
+
+  const filtered = activeFilter === 'all' ? unactioned : unactioned.filter(e => e.category === activeFilter);
+  const list = document.getElementById('email-list');
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="empty-state-title">All caught up!</div>
+      <div class="empty-state-sub">No emails need attention right now.</div>
+    </div>`;
+  } else {
+    list.innerHTML = filtered.map(item => emailItemHTML(item)).join('');
+  }
+
+  // Actioned
+  const actionedSection = document.getElementById('actioned-section');
+  const actionedList = document.getElementById('actioned-list');
+  if (actioned.length > 0) {
+    actionedSection.style.display = 'block';
+    actionedList.innerHTML = actioned.slice(0, 6).map(item => `
+      <div class="actioned-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>${item.subject}</span>
+        <span style="font-size:10px; color:var(--text-faint); flex-shrink:0;">Done</span>
+      </div>`).join('');
+  } else { actionedSection.style.display = 'none'; }
+}
+
+function emailItemHTML(item) {
+  const icons = { high:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', medium:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', low:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>' };
+  const sender = item.from_.replace(/<.*>/, '').trim().replace(/"/g,'');
+  const date = new Date(item.date).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+  // WUFAR recommendation for requisitions
+  let wufarHTML = '';
+  if (item.category === 'requisition') {
+    const searchText = item.subject + ' ' + item.snippet;
+    const rec = getWufarRecommendation(searchText, '10');
+    wufarHTML = wufarChipHTML(rec, item.id, 'email');
+  }
+  return `<div class="email-item ${item.priority}-priority">
+    <div class="email-icon">${icons[item.priority] || icons.low}</div>
+    <div class="email-content">
+      <div class="email-row1">
+        <span class="email-subject">${item.subject}</span>
+        <span class="badge badge-${item.category}">${item.category}</span>
+      </div>
+      <div class="email-meta"><strong>${sender}</strong> · ${date}</div>
+      <div class="email-snippet">${item.snippet}</div>
+      ${wufarHTML}
+    </div>
+    <div class="email-actions">
+      <button class="btn btn-ghost btn-sm" onclick="createTaskFromEmail('${item.id}')" title="Create task">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Task
+      </button>
+      <button class="btn btn-success btn-sm" onclick="markActioned('${item.id}')" title="Mark done">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Done
+      </button>
+      <button class="btn btn-danger btn-sm" onclick="deleteEmail('${item.id}')" title="Remove">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div>
+  </div>`;
+}
+
+function setEmailFilter(cat) { activeFilter = cat; renderEmailList(); }
+function markActioned(id) { const i = emailItems.find(e=>e.id===id); if(i){i.isActioned=true; renderEmailList(); refreshBadges();} }
+function deleteEmail(id) { emailItems = emailItems.filter(e=>e.id!==id); renderEmailList(); refreshBadges(); }
+function createTaskFromEmail(id) {
+  const item = emailItems.find(e=>e.id===id);
+  if(!item) return;
+  tasks.push({ id:newId('t'), title:item.subject, description:'From: '+item.from_, category:item.category, priority:item.priority, status:'todo', dueDate:'' });
+  renderTaskList(); refreshBadges();
+  showPage('tasks');
+}
+
+// ---- TASKS ----
+const taskFilters = ['all','todo','in_progress','done'];
+function renderTaskList() {
+  const filterContainer = document.getElementById('task-filters');
+  filterContainer.innerHTML = taskFilters.map(f => `<button class="pill${activeTaskFilter===f?' active':''}" onclick="setTaskFilter('${f}')">${f==='in_progress'?'In Progress':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+
+  const filtered = activeTaskFilter === 'all' ? tasks : tasks.filter(t=>t.status===activeTaskFilter);
+  const container = document.getElementById('task-list');
+
+  const prioOrder = {high:0, medium:1, low:2};
+  const sorted = [...filtered].sort((a,b)=>(prioOrder[a.priority]??1)-(prioOrder[b.priority]??1));
+
+  if(sorted.length === 0) {
+    container.innerHTML = `<div class="empty-state"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><div class="empty-state-title">No tasks here.</div></div>`;
+    return;
+  }
+
+  const groups = {};
+  for(const t of sorted) { if(!groups[t.status]) groups[t.status]=[]; groups[t.status].push(t); }
+  const statusLabels = {todo:'To Do', in_progress:'In Progress', done:'Done'};
+  const statusIcons = { todo:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>', in_progress:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', done:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' };
+  const prioIcons = { high:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>', medium:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>', low:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>' };
+
+  container.innerHTML = ['todo','in_progress','done'].filter(s=>groups[s]).map(status => `
+    <div>
+      <div class="task-group-label">${statusIcons[status]} ${statusLabels[status]} (${groups[status].length})</div>
+      ${groups[status].map(t => {
+        let wufarTaskHTML = '';
+        if (t.category === 'requisition' && t.status !== 'done') {
+          const searchText = t.title + ' ' + (t.description || '');
+          const rec = getWufarRecommendation(searchText, '10');
+          wufarTaskHTML = wufarChipHTML(rec, t.id, 'task');
+        }
+        return `
+        <div class="task-item${t.status==='done'?' done':''}">
+          <div style="margin-top:2px; flex-shrink:0;">${prioIcons[t.priority]||prioIcons.low}</div>
+          <div class="task-body">
+            <div class="task-title">${t.title}</div>
+            ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
+            ${t.dueDate ? `<div class="task-due">Due: ${t.dueDate}</div>` : ''}
+            ${wufarTaskHTML}
+          </div>
+          <div class="task-actions">
+            <span class="badge badge-${t.category}" style="margin-right:4px;">${t.category}</span>
+            ${t.status !== 'done' ? `<select class="status-select" onchange="updateTaskStatus('${t.id}', this.value)">
+              <option value="todo"${t.status==='todo'?' selected':''}>To Do</option>
+              <option value="in_progress"${t.status==='in_progress'?' selected':''}>In Progress</option>
+              <option value="done"${t.status==='done'?' selected':''}>Done</option>
+            </select>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deleteTask('${t.id}')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            </button>
+          </div>
+        </div>`;}).join('')}
+    </div>`).join('');
+}
+
+function setTaskFilter(f) { activeTaskFilter = f; renderTaskList(); }
+function toggleTaskForm() { taskFormOpen = !taskFormOpen; document.getElementById('task-form').style.display = taskFormOpen ? 'block' : 'none'; }
+function addTask() {
+  const title = document.getElementById('tf-title').value.trim();
+  if(!title) return;
+  tasks.push({ id:newId('t'), title, description:document.getElementById('tf-desc').value.trim(), category:document.getElementById('tf-cat').value, priority:document.getElementById('tf-priority').value, status:'todo', dueDate:document.getElementById('tf-due').value });
+  document.getElementById('tf-title').value = '';
+  document.getElementById('tf-desc').value = '';
+  document.getElementById('tf-due').value = '';
+  toggleTaskForm();
+  renderTaskList(); refreshBadges();
+}
+function updateTaskStatus(id, status) {
+  const t = tasks.find(t=>t.id===id);
+  if(t) { t.status = status; renderTaskList(); refreshBadges(); }
+}
+function deleteTask(id) { tasks = tasks.filter(t=>t.id!==id); renderTaskList(); refreshBadges(); }
+
+// ---- SCHEDULE ----
+function renderSchedule() {
+  const grouped = {};
+  for(const p of patterns) { if(!grouped[p.category]) grouped[p.category]=[]; grouped[p.category].push(p); }
+  const order = ['Accounts Payable','Banking','Reporting','Student Accounts','Food Service','Tax Compliance','Compliance','Operations'];
+  const sortedGroups = Object.entries(grouped).sort((a,b)=>{
+    const ia = order.indexOf(a[0]); const ib = order.indexOf(b[0]);
+    return (ia===-1?99:ia)-(ib===-1?99:ib);
+  });
+
+  document.getElementById('sched-daily').textContent = patterns.filter(p=>p.frequency==='daily').length;
+  document.getElementById('sched-weekly').textContent = patterns.filter(p=>p.frequency==='weekly').length;
+  document.getElementById('sched-monthly').textContent = patterns.filter(p=>p.frequency==='monthly').length;
+
+  document.getElementById('schedule-list').innerHTML = sortedGroups.map(([cat, jobs]) => `
+    <div class="pattern-group">
+      <div class="pattern-group-title">${cat}</div>
+      ${jobs.map(j => `
+        <div class="pattern-item">
+          <div class="pattern-body">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span class="pattern-name">${j.name}</span>
+              <span class="badge badge-${j.frequency}">${j.frequency}</span>
+              ${j.count > 1 ? `<span style="font-size:10px; color:var(--text-faint);">seen ${j.count}×</span>` : ''}
+            </div>
+            ${j.description ? `<div class="pattern-desc">${j.description}</div>` : ''}
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function togglePatternForm() { patternFormOpen = !patternFormOpen; document.getElementById('pattern-form').style.display = patternFormOpen ? 'block' : 'none'; }
+function addPattern() {
+  const name = document.getElementById('pf-name').value.trim();
+  if(!name) return;
+  patterns.push({ id:newId('p'), name, description:document.getElementById('pf-desc').value.trim(), frequency:document.getElementById('pf-freq').value, category:document.getElementById('pf-cat').value || 'General', count:1 });
+  document.getElementById('pf-name').value = '';
+  document.getElementById('pf-desc').value = '';
+  document.getElementById('pf-cat').value = '';
+  togglePatternForm();
+  renderSchedule();
+}
+</script>
+</body>
+</html>
