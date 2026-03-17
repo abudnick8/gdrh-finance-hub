@@ -1038,8 +1038,7 @@ function liveRefresh() {
   if (icon) icon.style.animation = 'spin 1s linear infinite';
   if (label) label.textContent = 'Fetching...';
 
-  const API = '__PORT_3000__'.startsWith('__') ? '' : '__PORT_3000__';
-  fetch(API + '/api/refresh')
+  fetch('/api/refresh')
     .then(r => r.json())
     .then(resp => {
       if (resp.ok) {

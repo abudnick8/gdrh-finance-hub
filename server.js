@@ -1,26 +1,134 @@
 const http = require('http');
-const { execSync } = require('child_process');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 
 const PORT = process.env.PORT || 3000;
 
-function callTool(sourceId, toolName, args) {
-  const params = { source_id: sourceId, tool_name: toolName, arguments: args };
-  const tmpFile = path.join(os.tmpdir(), 'et_' + Date.now() + '_' + Math.random().toString(36).slice(2) + '.json');
-  fs.writeFileSync(tmpFile, JSON.stringify(params));
+// ---- GOOGLE OAUTH2 TOKEN REFRESH ----
+async function getAccessToken() {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error('Missing Google OAuth env vars. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN in Railway.');
+  }
+
+  const body = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    refresh_token: refreshToken,
+    grant_type: 'refresh_token',
+  }).toString();
+
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: 'oauth2.googleapis.com',
+      path: '/token',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(body) },
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          if (json.access_token) resolve(json.access_token);
+          else reject(new Error('Token refresh failed: ' + data));
+        } catch (e) { reject(e); }
+      });
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+// ---- GMAIL API SEARCH ----
+async function gmailSearch(accessToken, query, maxResults = 20) {
+  const params = new URLSearchParams({ q: query, maxResults: String(maxResults) });
+  const url = `https://gmail.googleapis.com/gmail/v1/users/me/messages?${params}`;
+
+  const ids = await httpsGet(url, accessToken);
+  const messages = ids.messages || [];
+  if (messages.length === 0) return [];
+
+  // Fetch each message in parallel (batch of up to 20)
+  const results = await Promise.all(
+    messages.slice(0, maxResults).map(m => gmailGetMessage(accessToken, m.id))
+  );
+  return results.filter(Boolean);
+}
+
+async function gmailGetMessage(accessToken, id) {
   try {
-    const result = execSync(`external-tool call "$(cat ${tmpFile})"`, { shell: '/bin/bash', timeout: 30000 });
-    fs.unlinkSync(tmpFile);
-    return JSON.parse(result.toString());
+    const url = `https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`;
+    return await httpsGet(url, accessToken);
   } catch (e) {
-    try { fs.unlinkSync(tmpFile); } catch(_) {}
-    const stderr = e.stderr ? e.stderr.toString() : '';
-    throw new Error(stderr || e.message);
+    return null;
   }
 }
 
+function httpsGet(url, accessToken) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const options = {
+      hostname: parsed.hostname,
+      path: parsed.pathname + parsed.search,
+      method: 'GET',
+      headers: { Authorization: 'Bearer ' + accessToken },
+    };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error('JSON parse error: ' + data.substring(0, 200))); }
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
+// ---- PARSE GMAIL MESSAGE ----
+function parseMessage(msg) {
+  if (!msg || !msg.payload) return null;
+
+  const headers = msg.payload.headers || [];
+  const get = (name) => (headers.find(h => h.name.toLowerCase() === name.toLowerCase()) || {}).value || '';
+
+  const subject = get('Subject') || '(No subject)';
+  const from = get('From');
+  const date = get('Date');
+  const labelIds = msg.labelIds || [];
+
+  // Get body text
+  let body = '';
+  function extractBody(part) {
+    if (!part) return;
+    if (part.mimeType === 'text/plain' && part.body && part.body.data) {
+      body += Buffer.from(part.body.data, 'base64').toString('utf-8');
+    }
+    if (part.parts) part.parts.forEach(extractBody);
+  }
+  extractBody(msg.payload);
+
+  const snippet = msg.snippet || body.substring(0, 200);
+
+  return {
+    emailId: msg.id,
+    subject,
+    from_: from,
+    date: date ? new Date(date).toISOString() : new Date().toISOString(),
+    snippet: snippet.substring(0, 200),
+    body: body.substring(0, 1000),
+    labels: labelIds,
+  };
+}
+
+// ---- CATEGORIZE + PRIORITIZE ----
 function categorize(subject) {
   if (/requisition|awaiting approval/i.test(subject)) return 'requisition';
   if (/invoice|bill|payment|due/i.test(subject)) return 'invoice';
@@ -42,10 +150,10 @@ function extractAmount(text) {
 }
 
 function extractVendor(text) {
-  const m = (text || '').match(/Vendor:\s*([^\n\.]+)/i);
+  const m = (text || '').match(/Vendor:\s*([^\n.]+)/i);
   if (m) return m[1].trim();
-  const known = ['speedway','superamerica','kwiktrip','amazon','walmart','grainger',
-                 'home depot','staples','anthem','apple','boswell','grackledocs','hi educators'];
+  const known = ['speedway', 'superamerica', 'kwiktrip', 'amazon', 'walmart', 'grainger',
+    'home depot', 'staples', 'anthem', 'apple', 'boswell', 'grackledocs', 'hi educators'];
   const t = (text || '').toLowerCase();
   for (const v of known) {
     if (t.includes(v)) return v.replace(/\b\w/g, c => c.toUpperCase());
@@ -53,14 +161,17 @@ function extractVendor(text) {
   return null;
 }
 
-function fetchRefreshData() {
+// ---- MAIN REFRESH ----
+async function fetchRefreshData() {
+  const accessToken = await getAccessToken();
+
   const searches = [
-    { query: 'subject:(Requisition "Awaiting Approval") newer_than:3d', max_results: 20 },
-    { query: 'subject:(invoice OR Invoice) newer_than:3d', max_results: 10 },
-    { query: 'from:SinglePointAlerts@hund.io newer_than:3d', max_results: 5 },
-    { query: 'from:@gdrh.org newer_than:2d -from:me', max_results: 15 },
-    { query: 'subject:(PayPal OR "US Bank" OR SinglePoint) newer_than:3d', max_results: 5 },
-    { query: 'subject:(closed OR closure OR announcement) newer_than:3d', max_results: 5 },
+    { query: 'subject:(Requisition "Awaiting Approval") newer_than:3d', max: 20 },
+    { query: 'subject:(invoice OR Invoice) newer_than:3d', max: 10 },
+    { query: 'from:SinglePointAlerts@hund.io newer_than:3d', max: 5 },
+    { query: 'from:@gdrh.org newer_than:2d -from:me', max: 15 },
+    { query: 'subject:(PayPal OR "US Bank" OR SinglePoint) newer_than:3d', max: 5 },
+    { query: 'subject:(closed OR closure OR announcement) newer_than:3d', max: 5 },
   ];
 
   const seen = new Set();
@@ -68,30 +179,30 @@ function fetchRefreshData() {
 
   for (const s of searches) {
     try {
-      const result = callTool('gcal', 'search_email', { queries: [s.query], max_results: s.max_results });
-      const items = result?.email_results?.emails || [];
-      for (const e of items) {
-        if (seen.has(e.email_id)) continue;
-        seen.add(e.email_id);
-        const cat = categorize(e.subject || '');
-        const bodyText = e.body || e.snippet || '';
+      const raw = await gmailSearch(accessToken, s.query, s.max);
+      for (const msg of raw) {
+        const parsed = parseMessage(msg);
+        if (!parsed || seen.has(parsed.emailId)) continue;
+        seen.add(parsed.emailId);
+        const cat = categorize(parsed.subject);
+        const bodyText = parsed.body || parsed.snippet;
         emails.push({
-          id: 'e_' + (e.email_id || '').substring(0, 8),
-          emailId: e.email_id,
-          subject: e.subject || '(No subject)',
-          from_: e.from_ || '',
-          date: e.date || new Date().toISOString(),
-          snippet: (e.snippet || bodyText).substring(0, 200),
+          id: 'e_' + parsed.emailId.substring(0, 8),
+          emailId: parsed.emailId,
+          subject: parsed.subject,
+          from_: parsed.from_,
+          date: parsed.date,
+          snippet: parsed.snippet,
           category: cat,
-          priority: prioritize(e.subject || '', cat),
+          priority: prioritize(parsed.subject, cat),
           isActioned: false,
           amount: extractAmount(bodyText),
           vendor: extractVendor(bodyText),
-          labels: e.labels || [],
+          labels: parsed.labels,
         });
       }
     } catch (err) {
-      console.error('Search failed:', s.query.substring(0,40), '-', err.message.substring(0,80));
+      console.error('Search failed:', s.query.substring(0, 40), '-', err.message.substring(0, 100));
     }
   }
 
@@ -103,7 +214,7 @@ function fetchRefreshData() {
     return new Date(b.date) - new Date(a.date);
   });
 
-  // Digest
+  // Build digest
   const high = emails.filter(e => e.priority === 'high');
   const reqs = emails.filter(e => e.category === 'requisition');
   const invoices = emails.filter(e => e.category === 'invoice');
@@ -118,7 +229,8 @@ function fetchRefreshData() {
   return { emails, digest, timestamp: new Date().toISOString() };
 }
 
-const server = http.createServer((req, res) => {
+// ---- HTTP SERVER ----
+const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -129,10 +241,11 @@ const server = http.createServer((req, res) => {
 
   if (url === '/api/refresh') {
     try {
-      const data = fetchRefreshData();
+      const data = await fetchRefreshData();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, data, timestamp: new Date().toISOString() }));
     } catch (err) {
+      console.error('Refresh error:', err.message);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: err.message }));
     }
@@ -141,14 +254,14 @@ const server = http.createServer((req, res) => {
 
   if (url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true }));
+    res.end(JSON.stringify({ ok: true, time: new Date().toISOString() }));
     return;
   }
 
-  // Serve index.html for everything else
+  // Serve index.html
   const filePath = path.join(__dirname, 'index.html');
   fs.readFile(filePath, (err, fileData) => {
-    if (err) { res.writeHead(500); res.end('Error'); return; }
+    if (err) { res.writeHead(500); res.end('Error loading app'); return; }
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(fileData);
   });

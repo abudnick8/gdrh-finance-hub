@@ -1,7 +1,7 @@
 {
   "name": "gdrh-finance-hub",
   "version": "1.0.0",
-  "description": "GDRH Finance Inbox Hub",
+  "description": "GDRH Finance Inbox Hub — Finance dashboard for Glendale-River Hills School District",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
