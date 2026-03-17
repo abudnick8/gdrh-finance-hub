@@ -264,11 +264,7 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Job Schedule
       </a>
-      <a class="nav-item" id="nav-settings" onclick="showPage('settings')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Settings
-        <span class="nav-badge" id="badge-settings" style="display:none; background:#10b981;">●</span>
-      </a>
+
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-email">
@@ -586,69 +582,6 @@
       </div>
     </div>
 
-    <!-- SETTINGS PAGE -->
-    <div class="page" id="page-settings">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Settings</div>
-          <div class="page-subtitle">Connect Google Apps Script for live Gmail &amp; Calendar refresh</div>
-        </div>
-      </div>
-
-      <!-- Live Refresh Card -->
-      <div class="form-card" style="margin-bottom:20px;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          <div style="font-size:14px; font-weight:600; color:var(--text-primary);">Live Gmail &amp; Calendar Refresh</div>
-        </div>
-        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:16px; line-height:1.6;">
-          To make the <strong>Refresh</strong> button pull your real Gmail and Calendar data, set up a free Google Apps Script bridge in 3 steps:
-        </p>
-
-        <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:14px; margin-bottom:16px; font-size:12px; line-height:1.8;">
-          <div style="font-weight:600; color:#0369a1; margin-bottom:6px;">Setup Steps (one-time, ~3 minutes)</div>
-          <ol style="margin:0; padding-left:18px; color:#0c4a6e;">
-            <li>Go to <a href="https://script.google.com" target="_blank" style="color:#2563eb;">script.google.com</a> → click <strong>New Project</strong></li>
-            <li>Delete any code in the editor. Paste the contents of the <strong>Code.gs</strong> file you downloaded.</li>
-            <li>Click <strong>Deploy</strong> → <strong>New deployment</strong> → type: <strong>Web app</strong></li>
-            <li>Set <em>Execute as:</em> <strong>Me</strong> and <em>Who has access:</em> <strong>Anyone</strong> → click <strong>Deploy</strong></li>
-            <li>Copy the <strong>Web App URL</strong> shown and paste it below.</li>
-          </ol>
-        </div>
-
-        <label class="form-label">Your Apps Script Web App URL</label>
-        <div style="display:flex; gap:8px; margin-top:6px;">
-          <input class="form-input" id="script-url-input" placeholder="https://script.google.com/macros/s/.../exec" style="flex:1; font-size:12px; font-family:monospace;" />
-          <button class="btn btn-primary btn-sm" onclick="saveScriptUrl()">Save &amp; Test</button>
-          <button class="btn btn-outline btn-sm" onclick="clearScriptUrl()">Clear</button>
-        </div>
-        <div id="script-url-status" style="margin-top:10px; font-size:12px;"></div>
-
-        <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border);">
-          <div style="font-size:11px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;">Connection Status</div>
-          <div id="connection-status" style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary);">
-            <span id="conn-dot" style="width:8px; height:8px; border-radius:50%; background:#d1d5db; display:inline-block;"></span>
-            <span id="conn-label">Not configured — paste your Apps Script URL above</span>
-          </div>
-          <div id="last-refresh-time" style="font-size:11px; color:var(--text-faint); margin-top:4px;"></div>
-        </div>
-      </div>
-
-      <!-- Refresh Behavior -->
-      <div class="form-card" style="margin-bottom:20px;">
-        <div style="font-size:13px; font-weight:600; margin-bottom:10px;">How Refresh Works</div>
-        <div style="font-size:12px; color:var(--text-secondary); line-height:1.7;">
-          <div style="margin-bottom:8px;">• <strong>Without Apps Script URL:</strong> The Refresh button re-renders your current data (learn overrides, task updates, etc.)</div>
-          <div style="margin-bottom:8px;">• <strong>With Apps Script URL:</strong> Refresh pulls live emails from Gmail + calendar events and replaces the email list with real-time data</div>
-          <div style="margin-bottom:8px;">• <strong>WUFAR codes</strong> and <strong>Learn overrides</strong> are automatically applied to newly fetched emails</div>
-          <div>• Your tasks and job patterns are never overwritten by a refresh — only the email inbox data updates</div>
-        </div>
-      </div>
-
-      <div style="text-align:center; padding: 24px 0 8px; font-size:11px; color:var(--text-faint);">
-        <a href="https://www.perplexity.ai/computer" target="_blank" style="color:inherit; text-decoration:none;">Created with Perplexity Computer</a>
-      </div>
-    </div>
 
   </main>
 </div>
@@ -1060,99 +993,25 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAll();
 });
 
-function renderAll() { renderEmailList(); renderTaskList(); renderSchedule(); renderWufarPage(); renderLearnPage(); renderSettings(); refreshBadges(); }
+function renderAll() { renderEmailList(); renderTaskList(); renderSchedule(); renderWufarPage(); renderLearnPage(); refreshBadges(); }
 
 // ---- NAVIGATION ----
 function showPage(name) {
-  ['overview','tasks','schedule','wufar','learn','settings'].forEach(p => {
+  ['overview','tasks','schedule','wufar','learn'].forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p === name);
     document.getElementById('nav-'+p).classList.toggle('active', p === name);
   });
-  if (name === 'settings') renderSettings();
 }
 
-// ---- SETTINGS / LIVE REFRESH ----
-function getScriptUrl() {
-  try { return store.getItem('gdrh_script_url') || ''; } catch(e) { return ''; }
-}
-
-function saveScriptUrl() {
-  const url = document.getElementById('script-url-input').value.trim();
-  if (!url) { setScriptStatus('error', 'Please paste a URL first.'); return; }
-  if (!url.includes('script.google.com')) { setScriptStatus('error', 'That doesn\'t look like a Google Apps Script URL.'); return; }
-  try { store.setItem('gdrh_script_url', url); } catch(e) {}
-  setScriptStatus('testing', 'Testing connection...');
-  testScriptUrl(url);
-}
-
-function clearScriptUrl() {
-  try { store.removeItem('gdrh_script_url'); } catch(e) {}
-  document.getElementById('script-url-input').value = '';
-  setScriptStatus('', '');
-  setConnStatus(false, 'Not configured — paste your Apps Script URL above');
-  document.getElementById('badge-settings').style.display = 'none';
-}
-
-function testScriptUrl(url) {
-  fetch(url)
-    .then(r => r.json())
-    .then(data => {
-      if (data.ok) {
-        setScriptStatus('ok', '✓ Connected! Found ' + (data.data.emails ? data.data.emails.length : 0) + ' emails and ' + (data.data.events ? data.data.events.length : 0) + ' calendar events.');
-        setConnStatus(true, 'Connected — live data available');
-        document.getElementById('badge-settings').style.display = 'inline';
-        applyLiveData(data.data);
-      } else {
-        setScriptStatus('error', '✗ Script returned error: ' + (data.error || 'Unknown'));
-      }
-    })
-    .catch(err => {
-      setScriptStatus('error', '✗ Could not reach Apps Script. Make sure "Anyone" has access when deploying.');
-    });
-}
-
-function setScriptStatus(type, msg) {
-  const el = document.getElementById('script-url-status');
-  if (!el) return;
-  const colors = { ok: '#065f46', error: '#991b1b', testing: '#1e40af', '': '' };
-  el.textContent = msg;
-  el.style.color = colors[type] || '#374151';
-}
-
-function setConnStatus(connected, label) {
-  const dot = document.getElementById('conn-dot');
-  const lbl = document.getElementById('conn-label');
-  if (!dot || !lbl) return;
-  dot.style.background = connected ? '#10b981' : '#d1d5db';
-  lbl.textContent = label;
-}
-
-function renderSettings() {
-  const url = getScriptUrl();
-  const input = document.getElementById('script-url-input');
-  if (input && !input.value && url) input.value = url;
-  if (url) {
-    setConnStatus(true, 'Connected — click Refresh to pull live data');
-    document.getElementById('badge-settings').style.display = 'inline';
-  } else {
-    setConnStatus(false, 'Not configured — paste your Apps Script URL above');
-  }
-  const ts = (() => { try { return store.getItem('gdrh_last_refresh') || ''; } catch(e) { return ''; } })();
-  if (ts) {
-    const d = document.getElementById('last-refresh-time');
-    if (d) d.textContent = 'Last refreshed: ' + new Date(ts).toLocaleString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
-  }
-}
-
+// ---- LIVE REFRESH (calls backend /api/refresh) ----
 function applyLiveData(data) {
   if (!data) return;
   if (data.emails && data.emails.length > 0) {
-    // Map Apps Script email objects to internal format
     emailItems = data.emails.map(e => ({
       id: e.id || ('e_' + Math.random().toString(36).slice(2,8)),
       emailId: e.emailId || e.id,
       subject: e.subject || '(No subject)',
-      from_: e.from_ || e.from || '',
+      from_: e.from_ || '',
       date: e.date || new Date().toISOString(),
       snippet: e.snippet || '',
       category: e.category || 'other',
@@ -1160,11 +1019,9 @@ function applyLiveData(data) {
       isActioned: !!e.isActioned,
       amount: e.amount || null,
       vendor: e.vendor || null,
+      labels: e.labels || [],
     }));
   }
-  // Store timestamp
-  try { store.setItem('gdrh_last_refresh', new Date().toISOString()); } catch(e) {}
-  // Update digest if present
   if (data.digest) {
     const dc = document.getElementById('digest-content');
     if (dc) dc.textContent = data.digest;
@@ -1173,47 +1030,32 @@ function applyLiveData(data) {
 }
 
 function liveRefresh() {
-  const url = getScriptUrl();
   const btn = document.getElementById('refresh-btn');
   const icon = document.getElementById('refresh-icon');
   const label = document.getElementById('refresh-label');
 
-  if (!url) {
-    // No script URL — just re-render (old behavior)
-    if (icon) icon.style.animation = 'spin 0.6s linear';
-    if (label) label.textContent = 'Refreshing...';
-    setTimeout(() => {
-      renderAll();
-      if (icon) icon.style.animation = '';
-      if (label) label.textContent = 'Refresh';
-    }, 400);
-    return;
-  }
-
-  // Live fetch from Apps Script
   if (btn) btn.disabled = true;
-  if (icon) { icon.style.animation = 'spin 1s linear infinite'; }
+  if (icon) icon.style.animation = 'spin 1s linear infinite';
   if (label) label.textContent = 'Fetching...';
 
-  fetch(url)
+  fetch('/api/refresh')
     .then(r => r.json())
-    .then(data => {
-      if (data.ok) {
-        applyLiveData(data.data);
+    .then(resp => {
+      if (resp.ok) {
+        applyLiveData(resp.data);
         if (label) label.textContent = 'Refreshed ✓';
-        setConnStatus(true, 'Last refreshed: ' + new Date().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }));
-        try { store.setItem('gdrh_last_refresh', new Date().toISOString()); } catch(e) {}
-        setTimeout(() => { if (label) label.textContent = 'Refresh'; }, 2000);
+        const sub = document.getElementById('today-date');
+        if (sub) sub.textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' }) + ' · Refreshed ' + new Date().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+        setTimeout(() => { if (label) label.textContent = 'Refresh'; }, 2500);
       } else {
         if (label) label.textContent = 'Error';
         setTimeout(() => { if (label) label.textContent = 'Refresh'; }, 2500);
-        alert('Apps Script error: ' + (data.error || 'Unknown. Check Settings.'));
+        console.error('Refresh error:', resp.error);
       }
     })
-    .catch(() => {
-      if (label) label.textContent = 'Failed';
-      setTimeout(() => { if (label) label.textContent = 'Refresh'; }, 2500);
-      alert('Could not reach Apps Script. Check your URL in Settings, or make sure the script is deployed with "Anyone" access.');
+    .catch(err => {
+      if (label) label.textContent = 'Refresh';
+      console.error('Refresh fetch failed:', err);
     })
     .finally(() => {
       if (btn) btn.disabled = false;
